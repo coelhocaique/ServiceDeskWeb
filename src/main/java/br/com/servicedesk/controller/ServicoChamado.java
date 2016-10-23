@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import br.com.servicedesk.dao.ChamadoDao;
 import br.com.servicedesk.model.Chamado;
 import br.com.servicedesk.ws.JSonFacadeChamado;
 
@@ -39,14 +40,15 @@ public class ServicoChamado extends HttpServlet {
 
 		String chave = request.getParameter("chave");
 		ArrayList<Chamado> lista = null;
+		ChamadoDao dao = new ChamadoDao();
 
 		PrintWriter out = response.getWriter();
-
+		System.out.println("chave" + chave);
 		try {
 			if (chave != null && chave.length() > 0) {
-				//lista = vendedor.listarChamados(chave);
+				lista = dao.listByFilaId(Integer.parseInt(chave));
 			} else {
-				//lista = vendedor.listarChamados();
+				lista = dao.listAll();
 			}
 			out.println(JSonFacadeChamado.listToJSon(lista));
 		} catch (Exception e) {
@@ -84,7 +86,7 @@ public class ServicoChamado extends HttpServlet {
 
 		try {
 			Chamado chamado = JSonFacadeChamado.jSonToChamado(sb.toString());
-			//chamado.atualizar();
+			chamado.closeById();
 			//retorna o Chamado atualizado
 			out.println(JSonFacadeChamado.chamadoToJSon(chamado));
 		} catch (Exception e) {

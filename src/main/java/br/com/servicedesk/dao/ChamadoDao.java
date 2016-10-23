@@ -33,15 +33,28 @@ public class ChamadoDao {
 		}
 		return chamado;
 	}
+	
+	public Chamado merge(Chamado chamado) {
+		try {
+			openTransaction();
+			chamado = manager.merge(chamado);
+		} catch (Exception e) {
+			rollback();
+			throw e;
+		} finally {
+			closeTransaction();
+		}
+		return chamado;
+	}
 
-	public int closeById(long numeroChamado,Date dataFechamento) {
+	public int closeById(Chamado chamado) {
 		int rowsAffected = 0;
 		try {
 			openTransaction();
-			Query query = manager.createQuery("update chamado set data_fechamento=:data,"
-						+ "status_id = 2 where numero_chamado= :numero", Chamado.class);
-			query.setParameter("data",dataFechamento);
-			query.setParameter("numero", numeroChamado);
+			Query query = manager.createQuery("update Chamado set dataDeFechamento=:data,"
+						+ "status = 2 where numero = :numero");
+			query.setParameter("data",chamado.getDataDeFechamento());
+			query.setParameter("numero", chamado.getNumero());
 			rowsAffected = query.executeUpdate();
 			commit();
 		} catch (Exception e) {
@@ -56,7 +69,7 @@ public class ChamadoDao {
 	public ArrayList<Chamado> listByFilaId(int filaId) {
 		try{
 		openTransaction();
-		return (ArrayList<Chamado>)manager.createQuery("select p from Chamado p where p.fila_id = :fila", Chamado.class)
+		return (ArrayList<Chamado>)manager.createQuery("select p from Chamado p where p.fila = :fila", Chamado.class)
 				.setParameter("fila", filaId).getResultList();
 		}catch(Exception e){
 			throw e;
@@ -70,6 +83,19 @@ public class ChamadoDao {
 			openTransaction();
 			return (ArrayList<Chamado>)manager.createQuery("select p from Chamado p where p.status_id = :status", Chamado.class)
 					.setParameter("status", statusId).getResultList();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			closeTransaction();
+		}
+
+	}
+	
+	public ArrayList<Chamado> listAll() {
+		try {
+			openTransaction();
+			return (ArrayList<Chamado>)manager.createQuery("select p from Chamado p order by numero", Chamado.class)
+					.getResultList();
 		} catch (Exception e) {
 			throw e;
 		} finally {

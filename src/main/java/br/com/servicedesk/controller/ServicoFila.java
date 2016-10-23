@@ -38,11 +38,9 @@ public class ServicoFila extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
-		
 		try {
 			FilaDao dao = new FilaDao();
 			ArrayList<String> list = dao.listAll();
-			System.out.println("passou por aqui");
 			out.println(JSonFacadeFila.listToJSon(list));
 		} catch (Exception e) {
 			e.printStackTrace();

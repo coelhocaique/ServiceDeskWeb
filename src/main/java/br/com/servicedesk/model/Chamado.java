@@ -60,6 +60,10 @@ public class Chamado {
     public int getFila() {
         return fila;
     }
+    
+    public Chamado(){
+    	
+    }
 
     public void setFila(int fila) {
         this.fila = fila;
@@ -111,11 +115,12 @@ public class Chamado {
     }
     
     public int closeById(){
-    	return dao.closeById(this.getNumero(),new Date());
+    	return dao.closeById(this);
     }
     
     public ArrayList<Chamado> listByFilaId(){
     	return dao.listByFilaId(this.getFila());
     }
+
 }
 

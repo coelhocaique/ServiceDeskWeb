@@ -36,10 +36,19 @@ public class JSonFacadeChamado {
 		for (Chamado chamado : lista) {
 			JSONObject object = new JSONObject();
 			try {
+				SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy");
 				object.put("numero", chamado.getNumero());
 				object.put("descricao", chamado.getDescricao());
-				object.put("dataFechamento", chamado.getDataDeFechamento().toString());
-				object.put("dataAbertura", chamado.getDataAbertura().toString());
+				try {
+					object.put("dataFechamento", dateformat.format(chamado.getDataDeFechamento()));
+				} catch (Exception e) {
+					object.put("dataFechamento", "");
+				}
+				try {
+					object.put("dataAbertura", dateformat.format(chamado.getDataAbertura()));
+				} catch (Exception e) {
+					object.put("dataAbertura", "");
+				}
 				object.put("fila", chamado.getFila());
 				object.put("status", chamado.getStatus());
 				vetor.put(object);
